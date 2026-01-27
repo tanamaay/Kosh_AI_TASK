@@ -79,6 +79,25 @@ python app.py
 
 Then open the local URL shown in the console (Flask default is `http://127.0.0.1:5000`).
 
+## Deploy (Render - recommended)
+
+1) Push your code to GitHub (already done).
+
+2) On Render:
+- Create **New → Web Service**
+- Connect your GitHub repo: `tanamaay/Kosh_AI_TASK`
+
+3) Configure:
+- **Runtime**: Python
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `gunicorn app:app --bind 0.0.0.0:$PORT`
+
+4) Deploy → open the public URL.
+
+## Deploy (Railway - alternative)
+- Create New Project → Deploy from GitHub repo
+- Set start command to: `gunicorn app:app --bind 0.0.0.0:$PORT`
+
 ## Notes
 - The code follows the prompt’s **fixed column positions** (B/D/L for Statement, D/F/K/M for Settlement).
 - If your file layout changes, the column indexes in `reconciliation.py` must be updated.
