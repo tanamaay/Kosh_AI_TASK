@@ -48,19 +48,56 @@ For **Present in Both**:
 ### High-level flow (graph)
 
 ```mermaid
-flowchart LR
-  U[User / Browser] -->|Upload Statement.xlsx + Settlement.xlsx| F[Flask App\napp.py]
-  F -->|Save files| UP[uploads/]
+┌────────────────────┐
+│   Input Layer      │
+│────────────────────│
+│ statement.xlsx     │
+│ settlement.xlsx    │
+└─────────┬──────────┘
+          │
+          ▼
+┌──────────────────────────┐
+│   File Processing Layer  │
+│──────────────────────────│
+│ process_statement()      │
+│ process_settlement()     │
+└─────────┬────────────────┘
+          │
+          ▼
+┌──────────────────────────┐
+│   Data Cleaning Layer    │
+│──────────────────────────│
+│ • Column normalization  │
+│ • PartnerPin extraction │
+│ • Amount normalization  │
+│ • Duplicate detection   │
+└─────────┬────────────────┘
+          │
+          ▼
+┌──────────────────────────┐
+│ Business Rules Layer     │
+│──────────────────────────│
+│ • Reconcile tagging     │
+│ • Cancel logic          │
+│ • Duplicate handling    │
+└─────────┬────────────────┘
+          │
+          ▼
+┌──────────────────────────┐
+│ Reconciliation Engine    │
+│──────────────────────────│
+│ • Merge on PartnerPin   │
+│ • Variance calculation  │
+│ • Tolerance matching    │
+└─────────┬────────────────┘
+          │
+          ▼
+┌──────────────────────────┐
+│ Output Layer             │
+│──────────────────────────│
+│ reconciliation_result.xlsx│
+└──────────────────────────┘
 
-  F -->|process_statement()| RS[Statement Parser\nreconciliation.py]
-  F -->|process_settlement()| RL[Settlement Parser\nreconciliation.py]
-
-  RS -->|Statement DF\nPartnerPin, AmountUSD, ReconcileStatus| REC[reconcile()\nreconciliation.py]
-  RL -->|Settlement DF\nPartnerPin, AmountUSD, ReconcileStatus| REC
-
-  REC -->|Result DF\n(Classification 5/6/7)\nFinalReconcileStatus + AmountVariance| F
-  F -->|Render HTML table| R[Results Page\ntemplates/results.html]
-  U <-->|View results| R
 ```
 
 ## Setup (Windows / PowerShell)
